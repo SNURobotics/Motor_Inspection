@@ -9,11 +9,11 @@ function [ feature ] = feature_MFCC_std( data, sample_rate)
 scope = [1, size(data, 2) ];
 % scope = [1, 200000 ];
 
-Tw = 15;           % analysis frame duration (ms)
-Ts = 5;           % analysis frame shift (ms)
+Tw = 25;           % analysis frame duration (ms)
+Ts = 10;           % analysis frame shift (ms)
 alpha = 0.97;      % preemphasis coefficient
-% R = [ 100 3700 ];  % frequency range to consider
-R = [ 10 7000 ];  % frequency range to consider
+R = [ 100 3700 ];  % frequency range to consider
+% R = [ 10 7000 ];  % frequency range to consider
 M = 20;            % number of filterbank channels
 C = 13;            % number of cepstral coefficients
 L = 22;            % cepstral sine lifter parameter
@@ -38,6 +38,16 @@ L = 22;            % cepstral sine lifter parameter
 % M = 40;            % number of filterbank channels
 % C = 11;            % number of cepstral coefficients
 % L = 10;            % cepstral sine lifter parameter
+
+% best performance parameter (not much tuned)
+% Tw = 25;           % analysis frame duration (ms)
+% Ts = 10;           % analysis frame shift (ms)
+% alpha = 0.97;      % preemphasis coefficient
+% R = [ 100 3700 ];  % frequency range to consider
+% % R = [ 10 7000 ];  % frequency range to consider
+% M = 20;            % number of filterbank channels
+% C = 13;            % number of cepstral coefficients
+% L = 22;            % cepstral sine lifter parameter
 
 
 hamming = @(N)(0.54-0.46*cos(2*pi*[0:N-1].'/(N-1)));

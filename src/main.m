@@ -9,7 +9,7 @@ load('..\data\dataset02\import.mat');
 %%  abstract feature
 feature = feature_extraction(data, 'MFCC_std2', info.sampling_rate);
 
-%%  iterative test
+%  iterative test
 N_test = 1000;
 confusion_pr_avg = zeros(2);
 confusion_cnt_sum = zeros(2, 'int32');
