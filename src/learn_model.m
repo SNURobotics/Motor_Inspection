@@ -1,4 +1,4 @@
-function [ model ] = learn_model( feature, tr_idx, method, opt_string )
+function [ model ] = learn_model( feature, tr_idx, method, varargin )
 %LEARN_MODEL Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -11,11 +11,7 @@ end
 
 
 fn = str2func(['fitc',method]);
-if nargin < 4
-    model = fn(X_tr, y_tr);
-else
-    model = fn(X_tr, y_tr, opt_string);
-end
+
+model = fn(X_tr, y_tr, varargin{:});
 
 end
-

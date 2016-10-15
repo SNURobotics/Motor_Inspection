@@ -4,23 +4,31 @@ addpath(genpath('..\lib'));
 addpath(genpath('..\util'));
 
 %%  load data
-load('..\data\dataset02\import.mat');
+load('..\data\dataset01\import.mat');
 
 %%  abstract feature
-feature = feature_extraction(data, 'MFCC_std2', info.sampling_rate);
-
-%  iterative test
+tic;
+feature = feature_extraction(data, 'MFCC_std', info.sampling_rate);
+% feature = feature_extraction(data, 'PLP_std', info.sampling_rate);
+toc;
+%%  iterative test
 N_test = 1000;
 confusion_pr_avg = zeros(2);
 confusion_cnt_sum = zeros(2, 'int32');
 
+info_copy = info;
+% info_copy = use_only_olds(info);
+% info_copy = use_only_dataset(info, 1);
+% info_copy = merge_bw(info);
+
 for i=1:N_test
     %  divide dataset
     
-    [tr_idx, tst_idx] = divide_dataset(info.index, 0.85);
+    [tr_idx, tst_idx] = divide_dataset(info_copy.index, 0.85);
     
     %  training
     model = learn_model(feature, tr_idx(1:2),'svm');
+%     model = learn_model(feature, tr_idx(1:2),'svm','Standardize', true, 'KernelFunction','rbf', 'KernelScale','auto');
     
     %  prediction
     [confusion_pr, confusion_cnt] = predict_label(feature, tst_idx(1:2), model);
@@ -31,6 +39,8 @@ for i=1:N_test
     clc;
     disp(sprintf('%d-th test', i));
     current_score = confusion_pr_avg / i
+    whole_score = sum(diag(confusion_cnt_sum)) / sum(confusion_cnt_sum(:))
 end
+
 
 clear confusion_cnt confusion_pr i

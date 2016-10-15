@@ -10,10 +10,10 @@ end
 %%  pre-define variables and constant
 class_label = {'g','w','b'};
 n_class = length(class_label);
-n_files = 0;
+n_files = zeros(1,n_class);
 n_data_length = 220500;
-info.index = cell(n_class,1);
-file_list = cell(n_class,1);
+info.index = cell(1,n_class);
+file_list = cell(1,n_class);
 info.label = int16([]);
 
 %%   count number of data

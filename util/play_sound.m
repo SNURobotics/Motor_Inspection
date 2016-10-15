@@ -1,4 +1,4 @@
-function [ output_args ] = play_sound( dataset_type, label, index , start_t, end_t)
+function [  ] = play_sound( dataset_type, label, index , start_t, end_t)
 %PLAY_SOUND Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -24,6 +24,8 @@ if dataset_type == 1
 else
     data = recData_prm;
 end
+
+data = data/max(abs(data));
 
 total_time = frame2sec(length(data), recSampleRate);
 
