@@ -8,8 +8,12 @@ load('..\data\dataset01\import.mat');
 
 %%  abstract feature
 tic;
-feature = feature_extraction(data, 'MFCC_std', info.sampling_rate);
+% feature = feature_extraction(data, 'MFCC_std', info.sampling_rate);
+% feature = feature_extraction(data, 'MFCC_tst', info.sampling_rate);
+feature = feature_extraction(data, 'MFCC_delta_std', info.sampling_rate);
+% feature = feature_extraction(data, 'MFCC_delta_raw', info.sampling_rate);
 % feature = feature_extraction(data, 'PLP_std', info.sampling_rate);
+% feature = feature_extraction(data, 'MFCC_GMM', info.sampling_rate);
 toc;
 %%  iterative test
 N_test = 1000;
@@ -28,7 +32,11 @@ for i=1:N_test
     
     %  training
     model = learn_model(feature, tr_idx(1:2),'svm');
-%     model = learn_model(feature, tr_idx(1:2),'svm','Standardize', true, 'KernelFunction','rbf', 'KernelScale','auto');
+%         model = learn_model(feature, tr_idx(1:2),'svm','Standardize', true, 'KernelFunction','rbf', 'KernelScale','auto');
+%         model = learn_model(feature, tr_idx(1:2),'linear');
+%         model = learn_model(feature, tr_idx(1:2),'discr');
+%         model = learn_model(feature, tr_idx(1:2),'knn','NumNeighbors',3,'Standardize',0);
+    
     
     %  prediction
     [confusion_pr, confusion_cnt] = predict_label(feature, tst_idx(1:2), model);

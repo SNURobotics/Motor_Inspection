@@ -1,4 +1,4 @@
-function [ feature ] = feature_MFCC_std( data, sample_rate)
+function [ feature ] = feature_MFCC_delta_raw( data, sample_rate)
 %FEATURE_MFCC_STD Summary of this function goes here
 %   data        : N by D matrix
 %   feature     : N by d matrix
@@ -55,14 +55,17 @@ hamming_func = @(N)(hamming(N));
 
 
 %%  abstraction
-MFCCs = mfcc( data(1, scope(1):scope(2)), sample_rate, Tw, Ts, alpha, hamming_func, R, M, C, L );
-feature = zeros(size(data,1), size(MFCCs,1));
+% MFCCs = mfcc( data(1, scope(1):scope(2)), sample_rate, Tw, Ts, alpha, hamming_func, R, M, C, L );
+% feature = zeros(size(data,1), size(MFCCs,1)*2);
 for i = 1 : size(data, 1)
 %     data(i,:) = data(i,:)/max(abs(data(i,:)));  % normalize
-    [ MFCCs, FBEs, frames ] = mfcc( data(i, scope(1):scope(2)), sample_rate, Tw, Ts, alpha, hamming_func, R, M, C, L );
-    
-    feature(i,:) = std(MFCCs, 0, 2).';
+    [ MFCCs, ~, ~ ] = mfcc( data(i, scope(1):scope(2)), sample_rate, Tw, Ts, alpha, hamming_func, R, M, C, L );
+    delta_MFCCs = deltas(MFCCs, 3);
+%     feature_temp = zscore([MFCCs;delta_MFCCs].');
+    feature_temp = [MFCCs;delta_MFCCs].';
+    feature(i,:) = feature_temp(:).';
 end
+
 
 
 

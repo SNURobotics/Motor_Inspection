@@ -1,11 +1,11 @@
-function [ feature ] = feature_MFCC_std( data, sample_rate)
+function [ feature ] = feature_MFCC_GMM( data, sample_rate)
 %FEATURE_MFCC_STD Summary of this function goes here
 %   data        : N by D matrix
 %   feature     : N by d matrix
 
 %% MFCC parameters
 
-% scope = [100000, 150000];
+% scope = [50000, 220000];
 scope = [1, size(data, 2) ];
 % scope = [1, 200000 ];
 
@@ -46,7 +46,7 @@ alpha = 0.97;      % preemphasis coefficient
 R = [ 100 3700 ];  % frequency range to consider
 % R = [ 10 7000 ];  % frequency range to consider
 M = 20;            % number of filterbank channels
-C = 13;            % number of cepstral coefficients
+C = 12;            % number of cepstral coefficients
 L = 22;            % cepstral sine lifter parameter
 
 
@@ -55,13 +55,15 @@ hamming_func = @(N)(hamming(N));
 
 
 %%  abstraction
-MFCCs = mfcc( data(1, scope(1):scope(2)), sample_rate, Tw, Ts, alpha, hamming_func, R, M, C, L );
-feature = zeros(size(data,1), size(MFCCs,1));
+% MFCCs = mfcc( data(1, scope(1):scope(2)), sample_rate, Tw, Ts, alpha, hamming_func, R, M, C, L );
+% feature = zeros(size(data,1), size(MFCCs,1)*2);
+opts.Maxiter = 1000;
 for i = 1 : size(data, 1)
 %     data(i,:) = data(i,:)/max(abs(data(i,:)));  % normalize
-    [ MFCCs, FBEs, frames ] = mfcc( data(i, scope(1):scope(2)), sample_rate, Tw, Ts, alpha, hamming_func, R, M, C, L );
-    
-    feature(i,:) = std(MFCCs, 0, 2).';
+    [ MFCCs, ~, ~ ] = mfcc( data(i, scope(1):scope(2)), sample_rate, Tw, Ts, alpha, hamming_func, R, M, C, L );
+    dMFCCs = deltas(MFCCs, 3);
+    GMM = fitgmdist([MFCCs;dMFCCs].', 5, 'CovarianceType', 'diagonal','Options',opts);
+    feature(i,:) = [GMM.mu(:); GMM.Sigma(:)].';
 end
 
 
