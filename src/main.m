@@ -12,8 +12,10 @@ tic;
 % feature = feature_extraction(data, 'MFCC_tst', info.sampling_rate);
 feature = feature_extraction(data, 'MFCC_delta_std', info.sampling_rate);
 % feature = feature_extraction(data, 'MFCC_delta_raw', info.sampling_rate);
-% feature = feature_extraction(data, 'PLP_std', info.sampling_rate);
+% feature = feature_extraction(data, 'Rasta_PLP_cep_std', info.sampling_rate);
+% feature = feature_extraction(data, 'Rasta_PLP_spec_std', info.sampling_rate);
 % feature = feature_extraction(data, 'MFCC_GMM', info.sampling_rate);
+% feature = randn(size(data,1), 12);
 toc;
 %%  iterative test
 N_test = 1000;
@@ -32,10 +34,12 @@ for i=1:N_test
     
     %  training
     model = learn_model(feature, tr_idx(1:2),'svm');
-%         model = learn_model(feature, tr_idx(1:2),'svm','Standardize', true, 'KernelFunction','rbf', 'KernelScale','auto');
-%         model = learn_model(feature, tr_idx(1:2),'linear');
-%         model = learn_model(feature, tr_idx(1:2),'discr');
-%         model = learn_model(feature, tr_idx(1:2),'knn','NumNeighbors',3,'Standardize',0);
+    %     model = learn_model(feature, tr_idx(1:2),'svm','KernelScale','auto');
+    %     model = learn_model(feature, tr_idx(1:2),'svm','Standardize', true, 'KernelFunction','rbf', 'KernelScale','auto');
+    %     model = learn_model(feature, tr_idx(1:2),'svm','Standardize', false, 'KernelFunction','rbf', 'KernelScale','auto');
+    %     model = learn_model(feature, tr_idx(1:2),'linear');
+    %     model = learn_model(feature, tr_idx(1:2),'discr');
+    %     model = learn_model(feature, tr_idx(1:2),'knn','NumNeighbors',3,'Standardize',0);
     
     
     %  prediction
@@ -45,7 +49,7 @@ for i=1:N_test
     
     %   display current state
     clc;
-    disp(sprintf('%d-th test', i));
+    fprintf('%d-th test\n', i);
     current_score = confusion_pr_avg / i
     whole_score = sum(diag(confusion_cnt_sum)) / sum(confusion_cnt_sum(:))
 end
