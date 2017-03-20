@@ -8,11 +8,11 @@ load('..\data\dataset01\import.mat');
 
 %%  abstract feature
 tic;
-% feature = feature_extraction(data, 'MFCC_std', info.sampling_rate);
+feature = feature_extraction(data, 'MFCC_std', info.sampling_rate);
 % feature = feature_extraction(data, 'MFCC_tst', info.sampling_rate);
-feature = feature_extraction(data, 'MFCC_delta_std', info.sampling_rate);
+% feature = feature_extraction(data, 'MFCC_delta_std', info.sampling_rate);
 % feature = feature_extraction(data, 'MFCC_delta_raw', info.sampling_rate);
-% feature = feature_extraction(data, 'Rasta_PLP_cep_std', info.sampling_rate);
+% feature = feature_extraction(data, 'Rasta_PLP_cep_std', info.sampling_rate,0,12);
 % feature = feature_extraction(data, 'Rasta_PLP_spec_std', info.sampling_rate);
 % feature = feature_extraction(data, 'MFCC_GMM', info.sampling_rate);
 % feature = randn(size(data,1), 12);
@@ -33,14 +33,15 @@ for i=1:N_test
     [tr_idx, tst_idx] = divide_dataset(info_copy.index, 0.85);
     
     %  training
-    model = learn_model(feature, tr_idx(1:2),'svm');
+    
+        model = learn_model(feature, tr_idx(1:2),'svm');
+    %         model = learn_model(feature, tr_idx(1:2),'svm','KernelFunction','rbf','KernelScale','auto','KKTTolerance',1e-9);
     %     model = learn_model(feature, tr_idx(1:2),'svm','KernelScale','auto');
-    %     model = learn_model(feature, tr_idx(1:2),'svm','Standardize', true, 'KernelFunction','rbf', 'KernelScale','auto');
+%         model = learn_model(feature, tr_idx(1:2),'svm','Standardize', true, 'KernelFunction','rbf', 'KernelScale','auto');
     %     model = learn_model(feature, tr_idx(1:2),'svm','Standardize', false, 'KernelFunction','rbf', 'KernelScale','auto');
     %     model = learn_model(feature, tr_idx(1:2),'linear');
     %     model = learn_model(feature, tr_idx(1:2),'discr');
     %     model = learn_model(feature, tr_idx(1:2),'knn','NumNeighbors',3,'Standardize',0);
-    
     
     %  prediction
     [confusion_pr, confusion_cnt] = predict_label(feature, tst_idx(1:2), model);
