@@ -8,17 +8,20 @@ load('..\data\dataset01\import.mat');
 
 %%  abstract feature
 tic;
-feature = feature_extraction(data, 'MFCC_std', info.sampling_rate);
+% feature = feature_extraction(data, 'MFCC_std', info.sampling_rate);
 % feature = feature_extraction(data, 'MFCC_tst', info.sampling_rate);
 % feature = feature_extraction(data, 'MFCC_delta_std', info.sampling_rate);
+feature = feature_extraction(data, 'MFCC_ddelta_std', info.sampling_rate);
 % feature = feature_extraction(data, 'MFCC_delta_raw', info.sampling_rate);
-% feature = feature_extraction(data, 'Rasta_PLP_cep_std', info.sampling_rate,0,12);
+% PLP only
+% feature = feature_extraction(data, 'Rasta_PLP_cep_std', info.sampling_rate,0,21); 
+% feature = feature_extraction(data, 'PLP_whole_std', info.sampling_rate,12); 
 % feature = feature_extraction(data, 'Rasta_PLP_spec_std', info.sampling_rate);
 % feature = feature_extraction(data, 'MFCC_GMM', info.sampling_rate);
 % feature = randn(size(data,1), 12);
 toc;
 %%  iterative test
-N_test = 1000;
+N_test = 10000;
 confusion_pr_avg = zeros(2);
 confusion_cnt_sum = zeros(2, 'int32');
 
