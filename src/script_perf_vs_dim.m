@@ -8,11 +8,12 @@ load('..\data\dataset01\import.mat');
 
 %%  iterative test
 N_test = 5000;
+N_features = 1:20;
 info_copy = info;
 % info_copy = use_only_olds(info);
 % info_copy = use_only_dataset(info, 1);
 % info_copy = merge_bw(info);
-for f = 1:20
+for f = N_features
     cnf_pr_sum = zeros(2);
     feature = feature_extraction(data, 'MFCC_delta_std', info.sampling_rate, f);
     for i=1:N_test
@@ -34,3 +35,17 @@ for f = 1:20
 end
 
 clear confusion_cnt confusion_pr i
+
+%%
+
+figure('Position', [100, 100, 400, 300]);
+hold on;
+plot( N_features, reshape(cnf_pr_avr(1,1,:),size(N_features)) , 'linewidth',2);
+plot( N_features, reshape(cnf_pr_avr(2,2,:),size(N_features)) , 'linewidth',2);
+
+xlabel('Num. of Coefficients');
+ylabel('Classification Accuracy');
+legend('True Positive', 'True Negative');
+
+xlim([0.9, N_features(end)]);
+ylim([0.0, 1.0]);
